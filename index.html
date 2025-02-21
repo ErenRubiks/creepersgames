@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CreepersGames Minecraft Sunucusu</title>
+  <style>
+    /* Genel Ayarlar */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+    body, html {
+      font-family: Arial, sans-serif;
+      background-color: #141414; /* Koyu arka plan */
+      color: #EAEAEA; /* Açık metin */
+      overflow-x: hidden;
+    }
+    /* Navigasyon - Menü Sırası Düzenlendi */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #212121;
+      padding: 20px 40px;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #00C853;
+    }
+    .navbar .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #EAEAEA;
+    }
+    .navbar nav {
+      display: flex;
+    }
+    .navbar nav a {
+      color: #EAEAEA;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    .navbar nav a:hover {
+      color: #00C853;
+    }
+    /* Hero Bölümü */
+    .hero {
+      position: relative;
+      height: 100vh;
+      scroll-snap-align: start;
+      background: url('minecraft_background.jpg') no-repeat center center/cover;
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1;
+    }
+    .hero h1, .hero p, .hero button {
+      position: relative;
+      z-index: 2;
+      animation: fadeIn 1s forwards;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      animation-delay: 0.5s;
+    }
+    .hero p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      animation-delay: 1s;
+    }
+    .hero button {
+      padding: 15px 30px;
+      font-size: 1rem;
+      background: #00C853;
+      border: none;
+      cursor: pointer;
+      color: #141414;
+      font-weight: bold;
+      transition: background 0.3s;
+      animation-delay: 1.5s;
+      border-radius: 10px;
+    }
+    .hero button:hover {
+      background: #009624;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Bölüm Stilleri */
+    section {
+      scroll-snap-align: start;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px;
+    }
+    .section-title {
+      text-align: center;
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .section-title::after {
+      content: "";
+      width: 80px;
+      height: 4px;
+      background: #00C853;
+      display: block;
+      margin: 10px auto 0;
+    }
+    .section-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      text-align: center;
+      color: #ccc;
+    }
+    /* Sunucu Bilgileri Bölümü */
+    #server-info .info-box {
+      background: #1c1c1c;
+      padding: 20px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      margin: 20px auto;
+      max-width: 500px;
+    }
+    #server-info .info-box p {
+      font-size: 1.2rem;
+      margin: 10px 0;
+      color: #EAEAEA;
+    }
+    /* Bilgiler Bölümü - Sosyal Medya Kartları */
+    #bilgiler .social-info {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    #bilgiler .social-item {
+      background: #1c1c1c;
+      padding: 20px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      width: 300px;
+      text-align: center;
+    }
+    #bilgiler .social-item img.social-logo {
+      width: 60px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    #bilgiler .social-item h3 {
+      margin: 10px 0;
+      color: #00C853;
+    }
+    #bilgiler .social-item p {
+      font-size: 1rem;
+      margin: 10px 0;
+    }
+    #bilgiler .social-item a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: #00C853;
+      border: none;
+      cursor: pointer;
+      color: #141414;
+      font-weight: bold;
+      transition: background 0.3s;
+      border-radius: 10px;
+      text-decoration: none;
+    }
+    #bilgiler .social-item a:hover {
+      background: #009624;
+    }
+    /* Diğer Bölümler (Özellikler, Oyun Modları, İletişim) */
+    .features, .gamemodes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .feature-item, .gamemode-item {
+      background: #1c1c1c;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 10px;
+      flex: 1 1 280px;
+      max-width: 300px;
+    }
+    .feature-item h3, .gamemode-item h3 {
+      margin-bottom: 10px;
+      color: #00C853;
+    }
+    /* Eski Butonlar (Email) */
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      background: #00C853;
+      border: none;
+      cursor: pointer;
+      color: #141414;
+      font-weight: bold;
+      transition: background 0.3s;
+      border-radius: 10px;
+      text-decoration: none;
+      text-align: center;
+    }
+    .btn:hover {
+      background: #009624;
+    }
+    /* Footer */
+    footer {
+      background: #212121;
+      padding: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      border-top: 2px solid #00C853;
+    }
+    footer a {
+      color: #00C853;
+      text-decoration: none;
+    }
+    /* Sabit Scroll Butonları (Sağ Orta) */
+    .fixed-scroll-buttons {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+    }
+    .fixed-scroll-buttons button {
+      background: #00C853;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      color: #141414;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .fixed-scroll-buttons button:hover {
+      background: #009624;
+    }
+    /* Responsive Ayarlar */
+    @media (max-width: 768px) {
+      .navbar nav {
+        display: none;
+      }
+      .hero h1 {
+        font-size: 3rem;
+      }
+      .hero p {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigasyon (Yeni Sıra: Ana Sayfa, Hakkında, Bilgiler, Sunucu Bilgileri, Özellikler, Oyun Modları, İletişim) -->
+  <header class="navbar">
+    <div class="logo">CreepersGames</div>
+    <nav>
+      <a href="#hero">Ana Sayfa</a>
+      <a href="#about">Hakkında</a>
+      <a href="#bilgiler">Bilgiler</a>
+      <a href="#server-info">Sunucu Bilgileri</a>
+      <a href="#features">Özellikler</a>
+      <a href="#gamemodes">Oyun Modları</a>
+      <a href="#contact">İletişim</a>
+    </nav>
+  </header>
+
+  <!-- Hero Bölümü -->
+  <section class="hero" id="hero">
+    <h1>CreepersGames</h1>
+    <p>En kaliteli Minecraft deneyimi için buradayız.</p>
+    <button onclick="window.location.href='#about'">Devamını Oku</button>
+  </section>
+
+  <!-- Sunucumuz Hakkında Bölümü -->
+  <section id="about">
+    <div class="section-content">
+      <h2 class="section-title">Sunucumuz Hakkında</h2>
+      <p>
+        CreepersGames, Minecraft tutkunları için özenle hazırlanmış profesyonel bir sunucudur.
+        Adil oyun deneyimi, özel etkinlikler ve sürprizlerle dolu bir dünya sunuyoruz.
+        Sürekli gelişen sistemlerimizle, her oyuncunun keyifli vakit geçirmesi için çalışıyoruz.
+      </p>
+    </div>
+  </section>
+
+  <!-- Bilgiler Bölümü -->
+  <section id="bilgiler">
+    <div class="section-content">
+      <h2 class="section-title">Bilgiler</h2>
+      <p>Sosyal medya hesaplarımız ve iletişim bilgilerimiz:</p>
+      <div class="social-info">
+        <div class="social-item">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube Logo" class="social-logo">
+          <h3>YouTube</h3>
+          <p>Güncel videolarımızı izleyin.</p>
+          <a href="https://www.youtube.com/@creezymc" target="_blank">YouTube</a>
+        </div>
+        <div class="social-item">
+            <img src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Logo" class="social-logo">
+          <h3>Discord</h3>
+          <p>Topluluğumuza katılın.</p>
+          <a href="https://discord.gg/R7NhfvMGkW" target="_blank">Discord Katıl</a>
+        </div>
+        <div class="social-item">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/2048px-Instagram_logo_2022.svg.png" alt="İnstagram Logo" class="social-logo">
+          <h3>Instagram</h3>
+          <p>İnstagramda takipte kalın.</p>
+          <a href="https://www.instagram.com/erenrubiks/" target="_blank">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sunucu Bilgileri Bölümü -->
+  <section id="server-info">
+    <div class="section-content">
+      <h2 class="section-title">Sunucu Bilgileri</h2>
+      <div class="info-box">
+        <p><strong>Java IP Adresi:</strong> CreepersGames.aternos.me</p>
+        <p><strong>Java Sürümü:</strong> 1.9 - 1.21.4</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Özellikler Bölümü -->
+  <section id="features">
+    <div class="section-content">
+      <h2 class="section-title">Sunucu Özellikleri</h2>
+      <p>Sunucumuzun öne çıkan özellikleri:</p>
+      <div class="features">
+        <div class="feature-item">
+          <h3>Adil Oyun</h3>
+          <p>Hileye karşı güçlü sistemlerimiz ile adil ve rekabetçi bir oyun ortamı sağlıyoruz.</p>
+        </div>
+        <div class="feature-item">
+          <h3>Özel Etkinlikler</h3>
+          <p>Düzenli etkinlikler ve turnuvalar ile oyuncularımıza unutulmaz deneyimler sunuyoruz.</p>
+        </div>
+        <div class="feature-item">
+          <h3>Güncellemeler</h3>
+          <p>Sürekli yenilenen içerikler ve güncellemeler ile her zaman bir adım öndeyiz.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Oyun Modları Bölümü -->
+  <section id="gamemodes">
+    <div class="section-content">
+      <h2 class="section-title">Oyun Modları</h2>
+      <p>CreepersGames'te deneyebileceğiniz oyun modları:</p>
+      <div class="gamemodes">
+        <div class="gamemode-item">
+          <h3>Survival</h3>
+          <p>Doğada hayatta kalma ve zorlu maceralar sizi bekliyor.</p>
+        </div>
+        <div class="gamemode-item">
+          <h3>BoxPVP</h3>
+          <p>Kutular içinde rekabet dolu PvP savaşlarıyla heyecan yaşayın.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- İletişim Bölümü -->
+  <section id="contact">
+    <div class="section-content contact">
+      <h2 class="section-title">İletişim</h2>
+      <p>
+        Sorularınız veya sunucumuz hakkında daha fazla bilgi için bizimle iletişime geçin.
+      </p>
+      <p>Email: muhammederenyalcin@gmail.com</p>
+      <a href="mailto:muhammederenyalcin@gmail.com" class="btn">Email Gönder</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 CreepersGames. Tüm hakları saklıdır.</p>
+    <p><a href="https://www.youtube.com/@creezymc" target="_blank">CreezyMC YouTube</a></p>
+  </footer>
+
+  <!-- Sabit Scroll Butonları (Sağ Orta) -->
+  <div class="fixed-scroll-buttons">
+    <button id="scroll-up">&#9650;</button>
+    <button id="scroll-down">&#9660;</button>
+  </div>
+
+  <!-- JavaScript ile Scroll Fonksiyonları -->
+  <script>
+    function scrollToNextSection() {
+      const sections = document.querySelectorAll('section');
+      const scrollY = window.scrollY;
+      let nextSection = null;
+      sections.forEach(section => {
+        if (section.offsetTop > scrollY + 10) {
+          if (!nextSection || section.offsetTop < nextSection.offsetTop) {
+            nextSection = section;
+          }
+        }
+      });
+      if (nextSection) {
+        nextSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    
+    function scrollToPreviousSection() {
+      const sections = document.querySelectorAll('section');
+      const scrollY = window.scrollY;
+      let previousSection = null;
+      sections.forEach(section => {
+        if (section.offsetTop < scrollY - 10) {
+          if (!previousSection || section.offsetTop > previousSection.offsetTop) {
+            previousSection = section;
+          }
+        }
+      });
+      if (previousSection) {
+        previousSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    
+    document.getElementById('scroll-down').addEventListener('click', scrollToNextSection);
+    document.getElementById('scroll-up').addEventListener('click', scrollToPreviousSection);
+  </script>
+
+</body>
+</html>
